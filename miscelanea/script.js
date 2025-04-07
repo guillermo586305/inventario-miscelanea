@@ -1,68 +1,58 @@
-const inventario = {};
+const inventario = [];
 
-function registrarProducto(event) {
-  event.preventDefault(); // prevenir recarga
+document.getElementById("productoForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const nombre = document.getElementById("nombre").value;
+  const cantidad = parseInt(document.getElementById("cantidad").value);
+  const precio = parseInt(document.getElementById("precio").value);
+  const tipo = document.getElementById("tipo").value;
 
-  const nombre = document.getElementById('nombre').value.trim();
-  const cantidad = parseInt(document.getElementById('cantidad').value);
-  const precio = parseFloat(document.getElementById('precio').value);
-  const tipo = document.getElementById('tipo').value;
+  const productoExistente = inventario.find(p => p.nombre === nombre);
 
-  if (!nombre || isNaN(cantidad) || cantidad <= 0 || isNaN(precio) || precio <= 0) {
-    alert('Por favor, completa todos los campos correctamente.');
-    return;
-  }
-
-  if (!inventario[nombre]) {
-    inventario[nombre] = { cantidad: 0, precio: precio };
-  }
-
-  if (tipo === 'ingreso') {
-    inventario[nombre].cantidad += cantidad;
-    inventario[nombre].precio = precio; // actualiza el precio
-  } else if (tipo === 'salida') {
-    if (inventario[nombre].cantidad < cantidad) {
-      alert('No hay suficiente inventario para esta salida.');
-      return;
+  if (productoExistente) {
+    if (tipo === "ingreso") {
+      productoExistente.cantidad += cantidad;
+    } else if (tipo === "salida") {
+      productoExistente.cantidad -= cantidad;
     }
-    inventario[nombre].cantidad -= cantidad;
-  }
-
-  document.getElementById('productoForm').reset();
-  actualizarTabla(nombre, tipo, cantidad, precio);
-}
-
-function actualizarTabla(nombre, tipo, cantidadMovida, precioActual) {
-  const tabla = document.getElementById('tablaInventario');
-  const { cantidad, precio } = inventario[nombre];
-  const valorTotal = cantidad * precio;
-
-  let filaExistente = document.querySelector(`tr[data-producto="${nombre}"]`);
-
-  const formatoPesos = new Intl.NumberFormat('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    minimumFractionDigits: 0
-  });
-
-  const filaHTML = `
-    <td>${nombre}</td>
-    <td>${cantidad}</td>
-    <td>${tipo}</td>
-    <td>${formatoPesos.format(precio)}</td>
-    <td>${formatoPesos.format(valorTotal)}</td>
-  `;
-
-  if (filaExistente) {
-    filaExistente.innerHTML = filaHTML;
+    productoExistente.precio = precio;
+    productoExistente.tipo = tipo;
   } else {
-    const fila = document.createElement('tr');
-    fila.setAttribute('data-producto', nombre);
-    fila.innerHTML = filaHTML;
-    tabla.appendChild(fila);
+    inventario.push({ nombre, cantidad, precio, tipo });
   }
+
+  actualizarTabla();
+  e.target.reset();
+});
+
+function actualizarTabla() {
+  const tabla = document.getElementById("tablaInventario");
+  tabla.innerHTML = "";
+  inventario.forEach(producto => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${producto.nombre}</td>
+      <td>${producto.cantidad}</td>
+      <td>${producto.tipo}</td>
+      <td>$${producto.precio.toLocaleString("es-CO")}</td>
+      <td>$${(producto.cantidad * producto.precio).toLocaleString("es-CO")}</td>
+    `;
+    tabla.appendChild(fila);
+  });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("productoForm").addEventListener("submit", registrarProducto);
+// Validación del formulario de contacto
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const nombre = document.getElementById("nombreContacto").value;
+  const correo = document.getElementById("correo").value;
+  const mensaje = document.getElementById("mensaje").value;
+  const resultado = document.getElementById("resultado");
+
+  if (mensaje.length < 10) {
+    resultado.innerHTML = `<div class="alert alert-danger">El mensaje debe tener al menos 10 caracteres.</div>`;
+  } else {
+    resultado.innerHTML = `<div class="alert alert-success">Gracias ${nombre}, tu mensaje fue enviado correctamente.</div>`;
+    e.target.reset();
+  }
 });
