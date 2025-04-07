@@ -1,0 +1,65 @@
+/* Fondo general */
+body {
+  background-color: #fffbea; /* tono claro basado en amarillo */
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Encabezado */
+header {
+  background-color: #fcd116; /* amarillo bandera */
+  color: #000;
+}
+
+header h1 {
+  font-weight: bold;
+}
+
+/* Títulos */
+h2 {
+  color: #0033a0; /* azul bandera */
+  font-weight: bold;
+}
+
+/* Botones */
+.btn-success {
+  background-color: #d60000; /* rojo bandera */
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #b80000;
+}
+
+/* Tabla */
+.table thead {
+  background-color: #0033a0; /* azul */
+  color: white;
+}
+
+.table-bordered td {
+  background-color: #fff;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #fff7cc; /* amarillo muy claro */
+}
+
+/* Footer */
+footer {
+  background-color: #d60000; /* rojo */
+  color: white;
+}
+
+/* Formularios */
+.form-label {
+  color: #0033a0;
+}
+
+input.form-control, select.form-select {
+  border: 1px solid #0033a0;
+}
+
+/* Márgenes */
+main {
+  margin-bottom: 40px;
+}
